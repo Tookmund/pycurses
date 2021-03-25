@@ -5,13 +5,28 @@ def main(stdscr):
     # Clear screen
     stdscr.clear()
 
-    y, x = center(1, 8)
+    y, x = center(4, 8)
     stdscr.addstr(y, x, "TEST APP");
+    stdscr.addstr(y+1, x, "(a) Add");
+    stdscr.addstr(y+2, x, "(r) Remove");
+    stdscr.addstr(y+3, x, "(s) Search");
     stdscr.getkey()
+
     s = search("Student ID")
+    stdscr.clear()
     stdscr.addstr(s)
     stdscr.refresh()
     stdscr.getkey()
+
+    r = form("TEST", "A", "B", "C")
+    stdscr.clear()
+    stdscr.refresh()
+    r = form("Short Long", "Very Long Text Sample")
+    stdscr.clear()
+    stdscr.addstr(str(r))
+    stdscr.refresh()
+    stdscr.getkey()
+
 
 
 def autocomplete(s):
@@ -84,6 +99,27 @@ def search(what):
     if selection != -1:
         return res[selection]
     return searchstr
+
+def form(*args):
+    title = args[0]
+    args = args[1:]
+    res = [None] * len(args)
+    height = len(args)+2
+    width = 40
+    y, x = center(height, width)
+    win = curses.newwin(height, width, y, x)
+    win.keypad(True)
+    win.box()
+    win.addstr(0, (width - len(title)) // 2, title)
+    for i in range(len(args)):
+        win.addstr(i+1, 1, args[i]+": ")
+    win.refresh()
+    curses.echo()
+    for i in range(len(args)):
+        win.move(i+1, len(args[i])+3)
+        res[i] = win.getstr()
+    curses.noecho()
+    return res
 
 if __name__ == "__main__":
     curses.wrapper(main)
