@@ -1,6 +1,8 @@
 import curses
 from time import sleep
 
+WINWIDTH = 40
+
 def main(stdscr):
     # Clear screen
     stdscr.clear()
@@ -27,8 +29,6 @@ def main(stdscr):
     stdscr.refresh()
     stdscr.getkey()
 
-
-
 def autocomplete(s):
     #sleep(1)
     TEST = ["alpha", "beta", "gamma"]
@@ -41,13 +41,24 @@ def autocomplete(s):
 def center(height, width):
     return ((curses.LINES - height) // 2, (curses.COLS - width) // 2)
 
-def search(what):
-    height = 12
-    width = 40
+def is_backspace(key):
+    # Many terminal configs are broken, outputting delete instead
+    return key in ("KEY_BACKSPACE", "\b", "\x7f", "^?")
+
+def makewin(height, title=None):
+    width = WINWIDTH
+    # Account for the borders
+    height += 2
     y, x = center(height, width)
     win = curses.newwin(height, width, y, x)
-    win.keypad(1)
+    win.keypad(True)
     win.box()
+    if title is not None:
+        win.addstr(0, (width - len(title)) // 2, title)
+    return win
+
+def search(what):
+    win = makewin(12)
     win.addstr(1, 1, what+": ")
     searchstr = ""
     k = ""
@@ -61,7 +72,7 @@ def search(what):
         win.move(curloc[0], curloc[1])
         if k == "\n":
             break
-        if k in ("KEY_BACKSPACE", "\b", "\x7f", "^?"):
+        if is_backspace(k):
             if searchstr != "":
                 win.move(curloc[0], curloc[1]-1)
                 win.addstr(" ")
@@ -75,7 +86,7 @@ def search(what):
             if selection > -1:
                 selection -= 1
         elif len(k) == 1:
-            if curloc[1] < width-1:
+            if curloc[1] < WINWIDTH-1:
                 win.addstr(k)
                 newsearch = True
                 searchstr += k
@@ -104,13 +115,7 @@ def form(*args):
     title = args[0]
     args = args[1:]
     res = [None] * len(args)
-    height = len(args)+2
-    width = 40
-    y, x = center(height, width)
-    win = curses.newwin(height, width, y, x)
-    win.keypad(True)
-    win.box()
-    win.addstr(0, (width - len(title)) // 2, title)
+    win = makewin(len(args), title)
     for i in range(len(args)):
         win.addstr(i+1, 1, args[i]+": ")
     win.refresh()
