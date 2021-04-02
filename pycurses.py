@@ -23,6 +23,7 @@ def main(stdscr):
 
     r = form("TEST", "A", "B", "C")
     stdscr.clear()
+    stdscr.addstr(str(r))
     stdscr.refresh()
     r = form("Short Long", "Very Long Text Sample")
     stdscr.clear()
