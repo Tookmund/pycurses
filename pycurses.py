@@ -86,6 +86,8 @@ def search(what):
         elif k in ("KEY_DOWN", "^[B"):
             if selection < len(res):
                 selection += 1
+            else:
+                selection = -1
         elif k in ("KEY_UP", "^[A"):
             if selection > -1:
                 selection -= 1
