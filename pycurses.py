@@ -126,8 +126,9 @@ def form(*args):
     win.refresh()
     curses.echo()
     for i in range(len(args)):
-        win.move(i+1, len(args[i])+3)
-        res[i] = win.getstr()
+        qwidth = len(args[i])+3
+        win.move(i+1, qwidth)
+        res[i] = win.getstr(width-qwidth-1)
     curses.noecho()
     return res
 
