@@ -1,7 +1,8 @@
 import curses
 from time import sleep
 
-WINWIDTH = 40
+def defaultwinwidth():
+    return curses.COLS // 2
 
 def main(stdscr):
     # Clear screen
@@ -45,10 +46,11 @@ def is_backspace(key):
     # Many terminal configs are broken, outputting delete instead
     return key in ("KEY_BACKSPACE", "\b", "\x7f", "^?")
 
-def makewin(height, title=None):
-    width = WINWIDTH
+def makewin(height, width=None, title=None):
     # Account for the borders
     height += 2
+    if width is None:
+        width = defaultwinwidth()
     y, x = center(height, width)
     win = curses.newwin(height, width, y, x)
     win.keypad(True)
@@ -58,7 +60,8 @@ def makewin(height, title=None):
     return win
 
 def search(what):
-    win = makewin(12)
+    width = defaultwinwidth()
+    win = makewin(12, width)
     win.addstr(1, 1, what+": ")
     searchstr = ""
     k = ""
@@ -86,7 +89,7 @@ def search(what):
             if selection > -1:
                 selection -= 1
         elif len(k) == 1:
-            if curloc[1] < WINWIDTH-1:
+            if curloc[1] < width-1:
                 win.addstr(k)
                 newsearch = True
                 searchstr += k
@@ -115,7 +118,8 @@ def form(*args):
     title = args[0]
     args = args[1:]
     res = [None] * len(args)
-    win = makewin(len(args), title)
+    width = defaultwinwidth()
+    win = makewin(len(args), width, title)
     for i in range(len(args)):
         win.addstr(i+1, 1, args[i]+": ")
     win.refresh()
