@@ -167,9 +167,7 @@ def search(what, autocomplete):
         return res[selection]
     return searchstr
 
-def form(*args):
-    title = args[0]
-    args = args[1:]
+def form(title, *args):
     res = [None] * len(args)
     width = defaultwinwidth()
     win = makewin(len(args), width, title)
