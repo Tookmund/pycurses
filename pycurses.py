@@ -45,6 +45,7 @@ def menu(stdscr, title, *entries):
         curses.curs_set(0)
         stdscr.box()
         addtitle(stdscr, curses.COLS, title)
+        addhelptext(stdscr, ", or press the key in parentheses")
 
         selection = 0
         key = ""
@@ -99,6 +100,10 @@ def is_down(key):
 def addtitle(win, width, title):
     win.addstr(0, (width - len(title)) // 2, title)
 
+def addhelptext(win, additional=""):
+    y, x = win.getmaxyx()
+    win.addstr(y-1, 1, "↑ ↓ to select, ENTER to accept"+additional)
+
 def makewin(height, width=None, title=None):
     # Account for the borders
     height += 2
@@ -117,6 +122,7 @@ def search(what, autocomplete):
     height = curses.LINES // 2
     limit = height-3
     win = makewin(height, width)
+    addhelptext(win)
     win.addstr(1, 1, what+": ")
     searchstr = ""
     k = ""
