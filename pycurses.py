@@ -74,11 +74,11 @@ def menu(win, title, *entries):
             return
         entries[selection][2](win)
 
-def search(what, autocomplete):
+def search(title, autocomplete):
     """
     A curses search window with autocomplete functionality.
 
-    what: str, What the user is trying to search for, used to title the text entry
+    title: str, What the user is trying to search for, used to title the window
     autocomplete(s, limit): The autocomplete function to call on user input
         s: str, The current user input
         limit: int, How many results to return
@@ -89,8 +89,9 @@ def search(what, autocomplete):
     return: The final user input, either what they have selected, or the
     contents of the search box if they didn't select anything
 
-    +-------------------------------------------------------------------+
-    |WHAT:                                                              |
+    +------------------------------WHAT---------------------------------+
+    |                                                                   |
+    |-------------------------------------------------------------------|
     |AUTOCOMPLETE 1                                                     |
     |AUTOCOMPLETE 2                                                     |
     |AUTOCOMPLETE 3                                                     |
@@ -101,8 +102,10 @@ def search(what, autocomplete):
     height = curses.LINES // 2
     limit = height-3
     win = makewin(height, width)
+    addtitle(win, width, title)
     addhelptext(win)
-    win.addstr(1, 1, what+": ")
+    win.hline(2, 1, curses.ACS_HLINE, width-2)
+    win.move(1, 1)
     searchstr = ""
     k = ""
     curloc = [0,0]
@@ -136,8 +139,10 @@ def search(what, autocomplete):
                 newsearch = True
                 searchstr += k
                 curloc[1] += 1
+        win.move(3,1)
         win.clrtobot()
         win.box()
+        addtitle(win, width, title)
         addhelptext(win)
         if newsearch:
             selection = -1
@@ -147,7 +152,7 @@ def search(what, autocomplete):
             else:
                 res = autocomplete(searchstr, limit)
         for i in range(len(res)):
-            y = curloc[0]+1+i
+            y = curloc[0]+2+i
             x = 1
             item = " ".join(res[i])
             win.addstr(y, x, item)
