@@ -1,37 +1,5 @@
 import curses
 
-def defaultwinwidth():
-    return curses.COLS // 2
-
-def main(stdscr):
-    menu(stdscr, "TEST APP",
-        ("a", "Autocomplete Test", autocomptest),
-        ("f", "Form Test", formtest),
-        ("q", "Quit", None),
-    )
-
-def autocomptest(win):
-    s = search("Autocomplete", sample_autocomplete)
-    win.clear()
-    win.addstr(s)
-    win.refresh()
-    win.getkey()
-
-def formtest(win):
-    r = form("TEST", "A", "B", "C")
-    win.clear()
-    win.addstr(str(r))
-    win.refresh()
-    win.getkey()
-
-def sample_autocomplete(s, limit):
-    lorum = "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum".lower().split()
-    ret = []
-    for t in lorum:
-        if t.find(s) >= 0:
-            ret.append((t, t.upper()))
-    return ret[:limit]
-
 def menu(win, title, *entries):
     maxtitle = 0
     maxy, maxx = win.getmaxyx()
@@ -82,39 +50,6 @@ def menu(win, title, *entries):
         if entries[selection][2] is None:
             return
         entries[selection][2](win)
-
-def center(height, width):
-    return ((curses.LINES - height) // 2, (curses.COLS - width) // 2)
-
-def is_backspace(key):
-    # Many terminal configs are broken, outputting delete instead
-    return key in ("KEY_BACKSPACE", "\b", "\x7f", "^?")
-
-def is_up(key):
-    return key in ("KEY_UP", "^[A")
-
-def is_down(key):
-    return key in ("KEY_DOWN", "^[B")
-
-def addtitle(win, width, title):
-    win.addstr(0, (width - len(title)) // 2, title)
-
-def addhelptext(win, additional=""):
-    y, x = win.getmaxyx()
-    win.addstr(y-1, 1, "↑ ↓ to select, ENTER to accept"+additional)
-
-def makewin(height, width=None, title=None):
-    # Account for the borders
-    height += 2
-    if width is None:
-        width = defaultwinwidth()
-    y, x = center(height, width)
-    win = curses.newwin(height, width, y, x)
-    win.keypad(True)
-    win.box()
-    if title is not None:
-        addtitle(win, width, title)
-    return win
 
 def search(what, autocomplete):
     width = defaultwinwidth()
@@ -192,6 +127,71 @@ def form(title, *args):
         res[i] = win.getstr(width-qwidth-1)
     curses.noecho()
     return res
+
+def defaultwinwidth():
+    return curses.COLS // 2
+
+def center(height, width):
+    return ((curses.LINES - height) // 2, (curses.COLS - width) // 2)
+
+def is_backspace(key):
+    # Many terminal configs are broken, outputting delete instead
+    return key in ("KEY_BACKSPACE", "\b", "\x7f", "^?")
+
+def is_up(key):
+    return key in ("KEY_UP", "^[A")
+
+def is_down(key):
+    return key in ("KEY_DOWN", "^[B")
+
+def addtitle(win, width, title):
+    win.addstr(0, (width - len(title)) // 2, title)
+
+def addhelptext(win, additional=""):
+    y, x = win.getmaxyx()
+    win.addstr(y-1, 1, "↑ ↓ to select, ENTER to accept"+additional)
+
+def makewin(height, width=None, title=None):
+    # Account for the borders
+    height += 2
+    if width is None:
+        width = defaultwinwidth()
+    y, x = center(height, width)
+    win = curses.newwin(height, width, y, x)
+    win.keypad(True)
+    win.box()
+    if title is not None:
+        addtitle(win, width, title)
+    return win
+
+def main(stdscr):
+    menu(stdscr, "TEST APP",
+        ("a", "Autocomplete Test", autocomptest),
+        ("f", "Form Test", formtest),
+        ("q", "Quit", None),
+    )
+
+def autocomptest(win):
+    s = search("Autocomplete", sample_autocomplete)
+    win.clear()
+    win.addstr(s)
+    win.refresh()
+    win.getkey()
+
+def formtest(win):
+    r = form("TEST", "A", "B", "C")
+    win.clear()
+    win.addstr(str(r))
+    win.refresh()
+    win.getkey()
+
+def sample_autocomplete(s, limit):
+    lorum = "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum".lower().split()
+    ret = []
+    for t in lorum:
+        if t.find(s) >= 0:
+            ret.append((t, t.upper()))
+    return ret[:limit]
 
 if __name__ == "__main__":
     curses.wrapper(main)
