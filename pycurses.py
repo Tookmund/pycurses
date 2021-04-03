@@ -25,15 +25,14 @@ def formtest(stdscr):
     stdscr.refresh()
     stdscr.getkey()
 
-
-def sample_autocomplete(s):
+def sample_autocomplete(s, limit):
     #sleep(1)
-    TEST = ["alpha", "beta", "gamma"]
+    lorum = "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum".lower().split()
     ret = []
-    for t in TEST:
+    for t in lorum:
         if t.find(s) >= 0:
             ret.append(t)
-    return ret
+    return ret[:limit]
 
 def menu(stdscr, title, *entries):
     maxtitle = 0
@@ -113,7 +112,9 @@ def makewin(height, width=None, title=None):
 
 def search(what, autocomplete):
     width = defaultwinwidth()
-    win = makewin(12, width)
+    height = curses.LINES // 2
+    limit = height-3
+    win = makewin(height, width)
     win.addstr(1, 1, what+": ")
     searchstr = ""
     k = ""
@@ -151,11 +152,12 @@ def search(what, autocomplete):
         win.clrtobot()
         win.box()
         if newsearch:
+            selection = -1
             newsearch = False
             if searchstr == "":
                 res = []
             else:
-                res = autocomplete(searchstr)
+                res = autocomplete(searchstr, limit)
         for i in range(len(res)):
             y = curloc[0]+1+i
             x = 1
