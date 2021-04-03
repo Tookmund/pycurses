@@ -42,6 +42,7 @@ def menu(stdscr, title, *entries):
             maxtitle = titlelen
 
     while True:
+        curses.curs_set(0)
         stdscr.box()
         addtitle(stdscr, curses.COLS, title)
 
@@ -75,6 +76,7 @@ def menu(stdscr, title, *entries):
                         selection = i
                         key = "\n"
                         break
+        curses.curs_set(1)
         stdscr.clear()
         stdscr.refresh()
         if entries[selection][2] is None:
