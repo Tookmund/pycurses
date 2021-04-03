@@ -5,31 +5,25 @@ def defaultwinwidth():
     return curses.COLS // 2
 
 def main(stdscr):
-    # Clear screen
-    stdscr.clear()
+    menu(stdscr, "TEST APP",
+        ("a", "Autocomplete Test", autocomptest),
+        ("f", "Form Test", formtest),
+		("q", "Quit", None),
+    )
 
-    y, x = center(4, 8)
-    stdscr.addstr(y, x, "TEST APP");
-    stdscr.addstr(y+1, x, "(a) Add");
-    stdscr.addstr(y+2, x, "(r) Remove");
-    stdscr.addstr(y+3, x, "(s) Search");
-    stdscr.getkey()
-
-    s = search("Student ID")
+def autocomptest(stdscr):
+    s = search("Autocomplete")
     stdscr.clear()
     stdscr.addstr(s)
     stdscr.refresh()
     stdscr.getkey()
 
+def formtest(stdscr):
     r = form("TEST", "A", "B", "C")
     stdscr.clear()
     stdscr.addstr(str(r))
     stdscr.refresh()
-    r = form("Short Long", "Very Long Text Sample")
-    stdscr.clear()
-    stdscr.addstr(str(r))
-    stdscr.refresh()
-    stdscr.getkey()
+
 
 def autocomplete(s):
     #sleep(1)
@@ -39,6 +33,47 @@ def autocomplete(s):
         if t.find(s) >= 0:
             ret.append(t)
     return ret
+
+def menu(stdscr, title, *entries):
+    while True:
+        stdscr.box()
+        addtitle(stdscr, curses.COLS, title)
+
+        selection = 0
+        # (key, title, function)
+        key = ""
+        while key != "\n":
+            for i in range(len(entries)):
+                y = i+2
+                x = 1
+                item = "({}) {}".format(entries[i][0], entries[i][1])
+                stdscr.addstr(y, x, item)
+                if i == selection:
+                    stdscr.chgat(y, x, len(item), curses.A_REVERSE)
+            stdscr.refresh()
+
+            key = stdscr.getkey()
+            if is_down(key):
+                if selection < len(entries)-1:
+                    selection += 1
+                else:
+                    selection = 0
+            elif is_up(key):
+                if selection > 0:
+                    selection -= 1
+                else:
+                    selection = len(entries)-1
+            else:
+                for i in range(len(entries)):
+                    if key == entries[i][0]:
+                        selection = i
+                        key = "\n"
+                        break
+        stdscr.clear()
+        stdscr.refresh()
+        if entries[selection][2] is None:
+            return
+        entries[selection][2](stdscr)
 
 def center(height, width):
     return ((curses.LINES - height) // 2, (curses.COLS - width) // 2)
