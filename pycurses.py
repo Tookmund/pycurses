@@ -23,6 +23,7 @@ def formtest(stdscr):
     stdscr.clear()
     stdscr.addstr(str(r))
     stdscr.refresh()
+    stdscr.getkey()
 
 
 def sample_autocomplete(s):
