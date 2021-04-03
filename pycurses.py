@@ -11,19 +11,19 @@ def main(stdscr):
         ("q", "Quit", None),
     )
 
-def autocomptest(stdscr):
+def autocomptest(win):
     s = search("Autocomplete", sample_autocomplete)
-    stdscr.clear()
-    stdscr.addstr(s)
-    stdscr.refresh()
-    stdscr.getkey()
+    win.clear()
+    win.addstr(s)
+    win.refresh()
+    win.getkey()
 
-def formtest(stdscr):
+def formtest(win):
     r = form("TEST", "A", "B", "C")
-    stdscr.clear()
-    stdscr.addstr(str(r))
-    stdscr.refresh()
-    stdscr.getkey()
+    win.clear()
+    win.addstr(str(r))
+    win.refresh()
+    win.getkey()
 
 def sample_autocomplete(s, limit):
     #sleep(1)
@@ -34,8 +34,9 @@ def sample_autocomplete(s, limit):
             ret.append((t, t.upper()))
     return ret[:limit]
 
-def menu(stdscr, title, *entries):
+def menu(win, title, *entries):
     maxtitle = 0
+    maxy, maxx = win.getmaxyx()
     for entry in entries:
         titlelen = len(entry[1])
         if titlelen > maxtitle:
@@ -43,24 +44,24 @@ def menu(stdscr, title, *entries):
 
     while True:
         curses.curs_set(0)
-        stdscr.box()
-        addtitle(stdscr, curses.COLS, title)
-        addhelptext(stdscr, ", or press the key in parentheses")
+        win.box()
+        addtitle(win, maxx, title)
+        addhelptext(win, ", or press the key in parentheses")
 
         selection = 0
         key = ""
         while key != "\n":
-            x = (curses.COLS - maxtitle) // 2
+            x = (maxx - maxtitle) // 2
             # (key, title, function)
             for i in range(len(entries)):
                 y = i+2
                 item = "({}) {}".format(entries[i][0], entries[i][1])
-                stdscr.addstr(y, x, item)
+                win.addstr(y, x, item)
                 if i == selection:
-                    stdscr.chgat(y, x, len(item), curses.A_REVERSE)
-            stdscr.refresh()
+                    win.chgat(y, x, len(item), curses.A_REVERSE)
+            win.refresh()
 
-            key = stdscr.getkey()
+            key = win.getkey()
             if is_down(key):
                 if selection < len(entries)-1:
                     selection += 1
@@ -78,11 +79,11 @@ def menu(stdscr, title, *entries):
                         key = "\n"
                         break
         curses.curs_set(1)
-        stdscr.clear()
-        stdscr.refresh()
+        win.clear()
+        win.refresh()
         if entries[selection][2] is None:
             return
-        entries[selection][2](stdscr)
+        entries[selection][2](win)
 
 def center(height, width):
     return ((curses.LINES - height) // 2, (curses.COLS - width) // 2)
