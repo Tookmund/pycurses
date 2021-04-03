@@ -1,6 +1,29 @@
 import curses
 
 def menu(win, title, *entries):
+    """
+    Creates a menu out of an existing curses window.
+
+    win: A curses window object
+    title: The title of the window, displayed as the first line of the menu
+    entries: 3-element tuples used to create each menu item
+        key: str, What key the user can press to directly select the menu item
+        name: str, The name of the menu item
+        function(win): The function to call when this item is selected
+            If function is None, then menu will exit instead
+            win: The curses window object originally passed to menu
+            return: None
+
+    +-------------------------------TITLE-------------------------------+
+    |                                                                   |
+    |                           (a) NAME A                              |
+    |                           (b) NAME B                              |
+    |                           (c) NAME C                              |
+    |                                                                   |
+    |                                                                   |
+    |                                                                   |
+    +-↑ ↓ to select, ENTER to accept, or press the key in parentheses---+
+    """
     maxtitle = 0
     maxy, maxx = win.getmaxyx()
     for entry in entries:
@@ -52,6 +75,28 @@ def menu(win, title, *entries):
         entries[selection][2](win)
 
 def search(what, autocomplete):
+    """
+    A curses search window with autocomplete functionality.
+
+    what: str, What the user is trying to search for, used to title the text entry
+    autocomplete(s, limit): The autocomplete function to call on user input
+        s: str, The current user input
+        limit: int, How many results to return
+        return: list of 2 element tuples
+            match: The actual matching text
+            explain: Additional info the user might want about the match
+
+    return: The final user input, either what they have selected, or the
+    contents of the search box if they didn't select anything
+
+    +-------------------------------------------------------------------+
+    |WHAT:                                                              |
+    |AUTOCOMPLETE 1                                                     |
+    |AUTOCOMPLETE 2                                                     |
+    |AUTOCOMPLETE 3                                                     |
+    |                                                                   |
+    +-↑ ↓ to select, ENTER to accept------------------------------------+
+    """
     width = defaultwinwidth()
     height = curses.LINES // 2
     limit = height-3
@@ -114,6 +159,27 @@ def search(what, autocomplete):
     return searchstr
 
 def form(title, *args):
+    """
+    A curses window for form input
+
+	title: str, The title of the form, displayed at the top
+	*args: str, Name of each field to ask the user for
+		Note that user input for each field can only be as long as one line
+		One line is half of the columns available, which should be enough
+		for any reasonable terminal these days
+
+	return: List of all of the user inputs, in the same order the arguments
+		were passed to form
+
+    +---------------------------TITLE-----------------------------------+
+    |A:                                                                 |
+    |B:                                                                 |
+    |C:                                                                 |
+    |D:                                                                 |
+    |                                                                   |
+    +-↑ ↓ to select, ENTER to accept------------------------------------+
+
+    """
     res = [None] * len(args)
     width = defaultwinwidth()
     win = makewin(len(args), width, title)
@@ -127,6 +193,9 @@ def form(title, *args):
         res[i] = win.getstr(width-qwidth-1)
     curses.noecho()
     return res
+
+# Helper functions for all the above window-making functions
+# Could be useful to outside consumers, but not intended for their direct use
 
 def defaultwinwidth():
     return curses.COLS // 2
@@ -163,6 +232,8 @@ def makewin(height, width=None, title=None):
     if title is not None:
         addtitle(win, width, title)
     return win
+
+# Test functions demonstrating how to use this module
 
 def main(stdscr):
     menu(stdscr, "TEST APP",
