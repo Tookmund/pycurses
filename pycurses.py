@@ -168,14 +168,14 @@ def form(title, *args):
     """
     A curses window for form input
 
-	title: str, The title of the form, displayed at the top
-	*args: str, Name of each field to ask the user for
-		Note that user input for each field can only be as long as one line
-		One line is half of the columns available, which should be enough
-		for any reasonable terminal these days
+    title: str, The title of the form, displayed at the top
+    *args: str, Name of each field to ask the user for
+        Note that user input for each field can only be as long as one line
+        One line is half of the columns available, which should be enough
+        for any reasonable terminal these days
 
-	return: List of all of the user inputs, in the same order the arguments
-		were passed to form
+    return: List of all of the user inputs, in the same order the arguments
+        were passed to form
 
     +---------------------------TITLE-----------------------------------+
     |A:                                                                 |
