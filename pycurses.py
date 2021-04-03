@@ -35,17 +35,23 @@ def autocomplete(s):
     return ret
 
 def menu(stdscr, title, *entries):
+    maxtitle = 0
+    for entry in entries:
+        titlelen = len(entry[1])
+        if titlelen > maxtitle:
+            maxtitle = titlelen
+
     while True:
         stdscr.box()
         addtitle(stdscr, curses.COLS, title)
 
         selection = 0
-        # (key, title, function)
         key = ""
         while key != "\n":
+            x = (curses.COLS - maxtitle) // 2
+            # (key, title, function)
             for i in range(len(entries)):
                 y = i+2
-                x = 1
                 item = "({}) {}".format(entries[i][0], entries[i][1])
                 stdscr.addstr(y, x, item)
                 if i == selection:
