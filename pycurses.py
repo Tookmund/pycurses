@@ -8,7 +8,7 @@ def main(stdscr):
     menu(stdscr, "TEST APP",
         ("a", "Autocomplete Test", autocomptest),
         ("f", "Form Test", formtest),
-		("q", "Quit", None),
+        ("q", "Quit", None),
     )
 
 def autocomptest(stdscr):
