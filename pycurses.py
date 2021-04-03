@@ -12,7 +12,7 @@ def main(stdscr):
     )
 
 def autocomptest(stdscr):
-    s = search("Autocomplete")
+    s = search("Autocomplete", sample_autocomplete)
     stdscr.clear()
     stdscr.addstr(s)
     stdscr.refresh()
@@ -25,7 +25,7 @@ def formtest(stdscr):
     stdscr.refresh()
 
 
-def autocomplete(s):
+def sample_autocomplete(s):
     #sleep(1)
     TEST = ["alpha", "beta", "gamma"]
     ret = []
@@ -110,7 +110,7 @@ def makewin(height, width=None, title=None):
         addtitle(win, width, title)
     return win
 
-def search(what):
+def search(what, autocomplete):
     width = defaultwinwidth()
     win = makewin(12, width)
     win.addstr(1, 1, what+": ")
