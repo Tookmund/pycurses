@@ -31,7 +31,7 @@ def sample_autocomplete(s, limit):
     ret = []
     for t in lorum:
         if t.find(s) >= 0:
-            ret.append(t)
+            ret.append((t, t.upper()))
     return ret[:limit]
 
 def menu(stdscr, title, *entries):
@@ -161,13 +161,14 @@ def search(what, autocomplete):
         for i in range(len(res)):
             y = curloc[0]+1+i
             x = 1
-            win.addstr(y, x, res[i])
+            item = " ".join(res[i])
+            win.addstr(y, x, item)
             if i == selection:
-                win.chgat(y, x, len(res[i]), curses.A_REVERSE)
+                win.chgat(y, x, len(item), curses.A_REVERSE)
         win.move(curloc[0], curloc[1])
         win.refresh()
     if selection != -1:
-        return res[selection]
+        return res[selection][0]
     return searchstr
 
 def form(title, *args):
