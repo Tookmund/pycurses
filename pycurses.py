@@ -47,6 +47,15 @@ def is_backspace(key):
     # Many terminal configs are broken, outputting delete instead
     return key in ("KEY_BACKSPACE", "\b", "\x7f", "^?")
 
+def is_up(key):
+    return key in ("KEY_UP", "^[A")
+
+def is_down(key):
+    return key in ("KEY_DOWN", "^[B")
+
+def addtitle(win, width, title):
+    win.addstr(0, (width - len(title)) // 2, title)
+
 def makewin(height, width=None, title=None):
     # Account for the borders
     height += 2
@@ -57,7 +66,7 @@ def makewin(height, width=None, title=None):
     win.keypad(True)
     win.box()
     if title is not None:
-        win.addstr(0, (width - len(title)) // 2, title)
+        addtitle(win, width, title)
     return win
 
 def search(what):
@@ -83,12 +92,12 @@ def search(what):
                 curloc[1] -= 1
                 searchstr = searchstr[:len(searchstr)-1]
                 newsearch = True
-        elif k in ("KEY_DOWN", "^[B"):
+        elif is_down(k):
             if selection < len(res):
                 selection += 1
             else:
                 selection = -1
-        elif k in ("KEY_UP", "^[A"):
+        elif is_up(k):
             if selection > -1:
                 selection -= 1
         elif len(k) == 1:
