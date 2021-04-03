@@ -138,6 +138,7 @@ def search(what, autocomplete):
                 curloc[1] += 1
         win.clrtobot()
         win.box()
+        addhelptext(win)
         if newsearch:
             selection = -1
             newsearch = False
