@@ -258,13 +258,6 @@ def autocomptest(win):
     win.refresh()
     win.getkey()
 
-def formtest(win):
-    r = form("TEST", "A", "B", "C")
-    win.clear()
-    win.addstr(str(r))
-    win.refresh()
-    win.getkey()
-
 def sample_autocomplete(s, limit):
     lorum = "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum".lower().split()
     ret = []
@@ -272,6 +265,13 @@ def sample_autocomplete(s, limit):
         if t.find(s) >= 0:
             ret.append((t, t.upper()))
     return ret[:limit]
+
+def formtest(win):
+    r = form("TEST", "A", "B", "C")
+    win.clear()
+    win.addstr(str(r))
+    win.refresh()
+    win.getkey()
 
 if __name__ == "__main__":
     curses.wrapper(main)
