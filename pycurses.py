@@ -32,6 +32,7 @@ def menu(win, title, *entries):
             maxtitle = titlelen
 
     while True:
+        win.clear()
         curses.curs_set(0)
         win.box()
         addtitle(win, maxx, title)
