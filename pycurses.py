@@ -101,11 +101,12 @@ def search(title, autocomplete):
     """
     width = defaultwinwidth()
     height = curses.LINES // 2
-    limit = height-3
+    # One line for text entry, another for the horizontal separator
+    limit = height-2
     win = makewin(height, width)
     addtitle(win, width, title)
     addhelptext(win)
-    win.hline(2, 1, curses.ACS_HLINE, width-2)
+    win.hline(2, 1, curses.ACS_HLINE, width)
     win.move(1, 1)
     searchstr = ""
     k = ""
@@ -135,7 +136,7 @@ def search(title, autocomplete):
             if selection > -1:
                 selection -= 1
         elif len(k) == 1:
-            if curloc[1] < width-1:
+            if curloc[1] < width:
                 win.addstr(k)
                 newsearch = True
                 searchstr += k
@@ -195,8 +196,8 @@ def form(title, *args):
     win.refresh()
     curses.echo()
     for i in range(len(args)):
-        qwidth = len(args[i])+3
-        win.move(i+1, qwidth)
+        qwidth = len(args[i])+2
+        win.move(i+1, qwidth+1)
         res[i] = win.getstr(width-qwidth-1)
     curses.noecho()
     return res
@@ -230,6 +231,7 @@ def addhelptext(win, additional=""):
 def makewin(height, width=None, title=None):
     # Account for the borders
     height += 2
+    width += 2
     if width is None:
         width = defaultwinwidth()
     y, x = center(height, width)
