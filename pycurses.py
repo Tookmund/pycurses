@@ -202,6 +202,39 @@ def form(title, *args):
     curses.noecho()
     return res
 
+def table(title, header, rows):
+    """
+    A curses window for displaying tabular information
+    title: str, Window title, displayed in the top line
+    header: [str], Array of lines to be displayed before the table in the window
+    rows: [[any]], Array of rows, assumes all rows have the same length
+    """
+
+    collen = [1] * len(rows[0])
+    for r in rows:
+        for i in range(len(r)):
+            curlen = len(r[i])
+            if collen[i] < curlen:
+                collen[i] = curlen
+    width = sum(collen)+len(collen)
+    win = makewin(len(header)+(len(rows)*2), width, title)
+    win.move(1,1)
+    for i in range(len(header)):
+        win.addstr(i+1, 1, header[i])
+
+    for r in rows:
+        y, x = win.getyx()
+        win.move(y+1, 1)
+        win.hline(curses.ACS_HLINE, width)
+        win.move(y+2, 1)
+        for i in range(len(r)):
+            if i > 0:
+                win.addch(curses.ACS_VLINE)
+            spaces = " " * (collen[i] - len(r[i]))
+            win.addstr(r[i]+spaces)
+    win.refresh()
+    win.getkey()
+
 # Helper functions for all the above window-making functions
 # Could be useful to outside consumers, but not intended for their direct use
 
@@ -248,6 +281,7 @@ def main(stdscr):
     menu(stdscr, "TEST APP",
         ("a", "Autocomplete Test", autocomptest),
         ("f", "Form Test", formtest),
+        ("t", "Table Test", tabletest),
         ("q", "Quit", None),
     )
 
@@ -272,6 +306,13 @@ def formtest(win):
     win.addstr(str(r))
     win.refresh()
     win.getkey()
+
+def tabletest(win):
+    table("TEST", "THIS IS MY TEST".split(), [
+        ["A1", "A2", "A3", "A45"],
+        ["B11", "B2", "B3", "B4"],
+        ["C1", "C22", "C3", "C4"],
+    ])
 
 if __name__ == "__main__":
     curses.wrapper(main)
