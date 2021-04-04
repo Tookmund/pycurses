@@ -309,9 +309,13 @@ def formtest(win):
 
 def tabletest(win):
     table("TEST", "THIS IS MY TEST".split(), [
-        ["A1", "A2", "A3", "A45"],
-        ["B11", "B2", "B3", "B4"],
-        ["C1", "C22", "C3", "C4"],
+		["electricity","everything","stuck","island","straw","bowl"],
+		["practice","frame","arm","managed","avoid","driving"],
+		["behavior","leather","another","fur","particularly","sale"],
+		["feel","indeed","continued","slept","forest","dance"],
+		["gather","facing","race","anyone","regular","fighting"],
+		["constantly","win","exciting","rest","positive","value"],
+		["failed","zero","summer","toward","park","spring"],
     ])
 
 if __name__ == "__main__":
