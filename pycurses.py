@@ -1,4 +1,5 @@
 import curses
+import sys
 
 def menu(win, title, loop, *entries):
     """
@@ -322,5 +323,46 @@ def tabletest(win):
         ["failed","zero","summer","toward","park","spring"],
     ])
 
+# Functions for handling making windows from standard input
+
+def stdin_menu(stdscr):
+    options = []
+    title = sys.argv[2].strip()
+    for arg in sys.argv[3:]:
+        a = arg.split(";")
+        options.append((a[0], a[1], stdin_menu_select(a[0])))
+    return menu(stdscr, title, False, *options)
+
+def stdin_menu_select(option):
+    def select_option(win):
+        return option
+    return select_option
+
+def stdin_form(stdscr):
+    title = sys.argv[2].strip()
+    rl = form(title, *sys.argv[3:])
+    s = ""
+    for r in rl:
+        s += r.decode("utf-8")+"\n"
+    return s[:-1]
+
+def stdin_table(stdscr):
+    title = sys.argv[2].strip()
+    header = sys.argv[3].split(";")
+    rows = [x.split(";") for x in sys.argv[4:]]
+    return table(title, header, rows)
+
 if __name__ == "__main__":
-    curses.wrapper(main)
+    func = None
+    if len(sys.argv) == 1 or sys.argv[1] == "test":
+        func = main
+    else:
+        if sys.argv[1] == "menu":
+            func = stdin_menu
+        elif sys.argv[1] == "form":
+            func = stdin_form
+        elif sys.argv[1] == "table":
+            func = stdin_table
+    r = curses.wrapper(func)
+    if r is not None:
+        print(r)
