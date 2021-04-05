@@ -1,11 +1,13 @@
 import curses
 
-def menu(win, title, *entries):
+def menu(win, title, loop, *entries):
     """
     Creates a menu out of an existing curses window.
 
     win: A curses window object
-    title: The title of the window, displayed as the first line of the menu
+    title: str, The title of the window, displayed as the first line of the menu
+	loop: boolean, whether to keep going after an option is selected, or
+		return the result of the selected option function instead
     entries: 3-element tuples used to create each menu item
         key: str, What key the user can press to directly select the menu item
         name: str, The name of the menu item
@@ -73,7 +75,9 @@ def menu(win, title, *entries):
         win.refresh()
         if entries[selection][2] is None:
             return
-        entries[selection][2](win)
+        r = entries[selection][2](win)
+        if not loop:
+            return r
 
 def search(title, autocomplete):
     """
@@ -278,7 +282,7 @@ def makewin(height, width=None, title=None):
 # Test functions demonstrating how to use this module
 
 def main(stdscr):
-    menu(stdscr, "TEST APP",
+    menu(stdscr, "TEST APP", True,
         ("a", "Autocomplete Test", autocomptest),
         ("f", "Form Test", formtest),
         ("t", "Table Test", tabletest),
