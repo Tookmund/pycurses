@@ -7,8 +7,8 @@ def menu(win, title, loop, *entries):
 
     win: A curses window object
     title: str, The title of the window, displayed as the first line of the menu
-	loop: boolean, whether to keep going after an option is selected, or
-		return the result of the selected option function instead
+    loop: boolean, whether to keep going after an option is selected, or
+        return the result of the selected option function instead
     entries: 3-element tuples used to create each menu item
         key: str, What key the user can press to directly select the menu item
         name: str, The name of the menu item
