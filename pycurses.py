@@ -240,6 +240,24 @@ def table(title, header, rows):
     win.refresh()
     win.getkey()
 
+def alert(title, message):
+    """
+    A curses window for alerting the user
+
+    title: str, Title of the window, displayed at the top
+    message: str, Message to be displayed in the window
+    +---------------------------TITLE-----------------------------------+
+    | ALERT TEXT                                                        |
+    |                                                                   |
+    +-Press any key to continue-----------------------------------------+
+    """
+    message = " "+message+" "
+    win = makewin(2, len(message), title)
+    win.addstr(1,1, message)
+    win.addstr(3,1, "Press any key to continue")
+    win.refresh()
+    win.getkey()
+
 # Helper functions for all the above window-making functions
 # Could be useful to outside consumers, but not intended for their direct use
 
@@ -287,6 +305,7 @@ def main(stdscr):
         ("a", "Autocomplete Test", autocomptest),
         ("f", "Form Test", formtest),
         ("t", "Table Test", tabletest),
+        ("l", "Alert Test", alerttest),
         ("q", "Quit", None),
     )
 
@@ -322,6 +341,9 @@ def tabletest(win):
         ["constantly","win","exciting","rest","positive","value"],
         ["failed","zero","summer","toward","park","spring"],
     ])
+
+def alerttest(win):
+    alert("TEST", "This is a long alert message for you to read")
 
 # Functions for handling making windows from standard input
 
