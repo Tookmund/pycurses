@@ -376,6 +376,11 @@ def stdin_table(stdscr):
     rows = [x.split(";") for x in sys.argv[4:]]
     return table(title, header, rows)
 
+def stdin_alert(stdscr):
+    title = sys.argv[2].strip()
+    message = sys.argv[3].strip()
+    alert(title, message)
+
 if __name__ == "__main__":
     func = None
     if len(sys.argv) == 1 or sys.argv[1] == "test":
@@ -387,6 +392,8 @@ if __name__ == "__main__":
             func = stdin_form
         elif sys.argv[1] == "table":
             func = stdin_table
+        elif sys.argv[1] == "alert":
+            func = stdin_alert
     r = curses.wrapper(func)
     if r is not None:
         print(r)
