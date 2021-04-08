@@ -207,14 +207,18 @@ def form(title, *args):
     curses.noecho()
     return res
 
-def table(title, header, rows):
+def table(title, header, inputrows):
     """
     A curses window for displaying tabular information
     title: str, Window title, displayed in the top line
     header: [str], Array of lines to be displayed before the table in the window
     rows: [[any]], Array of rows, assumes all rows have the same length
     """
-
+    rows = []
+    for r in inputrows:
+        rows.append([])
+        for c in r:
+            rows[-1].append(str(c))
     collen = [1] * len(rows[0])
     for r in rows:
         for i in range(len(r)):
