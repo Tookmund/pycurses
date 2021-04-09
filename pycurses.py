@@ -238,13 +238,23 @@ def table(title, header, inputrows):
         y, x = win.getyx()
         win.move(y+1, 0)
         win.addch(curses.ACS_LTEE)
-        win.hline(curses.ACS_HLINE, width)
+        for w in range(1, width+1):
+            win.move(y+1, w)
+            if win.inch() != curses.ACS_BTEE:
+                win.addch(curses.ACS_HLINE)
         win.addch(y+1, width+1, curses.ACS_RTEE)
         win.move(y+2, 1)
         for i in range(len(r)):
             if i > 0:
+                y, x = win.getyx()
                 if r[i-1] != "  " and r[i] != "  ":
                     win.addch(curses.ACS_VLINE)
+                    if win.inch(y-1, x) == curses.ACS_BTEE:
+                        win.addch(y-1, x, curses.ACS_PLUS)
+                    else:
+                        win.addch(y-1, x, curses.ACS_TTEE)
+                    win.addch(y+1, x, curses.ACS_BTEE)
+                    win.move(y,x+1)
                 else:
                     win.addstr(" ")
             spaces = " " * (collen[i] - len(r[i]))
