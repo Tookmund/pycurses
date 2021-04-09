@@ -240,6 +240,8 @@ def table(title, header, inputrows):
             if i > 0:
                 if r[i-1] != "  " and r[i] != "  ":
                     win.addch(curses.ACS_VLINE)
+                else:
+                    win.addstr(" ")
             spaces = " " * (collen[i] - len(r[i]))
             win.addstr(r[i]+spaces)
     win.refresh()
