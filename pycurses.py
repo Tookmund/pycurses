@@ -238,7 +238,8 @@ def table(title, header, inputrows):
         win.move(y+2, 1)
         for i in range(len(r)):
             if i > 0:
-                win.addch(curses.ACS_VLINE)
+                if r[i-1] != "  " and r[i] != "  ":
+                    win.addch(curses.ACS_VLINE)
             spaces = " " * (collen[i] - len(r[i]))
             win.addstr(r[i]+spaces)
     win.refresh()
