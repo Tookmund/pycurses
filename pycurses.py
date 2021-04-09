@@ -218,7 +218,7 @@ def table(title, header, inputrows):
     for r in inputrows:
         rows.append([])
         for c in r:
-            rows[-1].append(str(c))
+            rows[-1].append(" "+str(c)+" ")
     collen = [1] * len(rows[0])
     for r in rows:
         for i in range(len(r)):
