@@ -219,13 +219,16 @@ def table(title, header, inputrows):
         rows.append([])
         for c in r:
             rows[-1].append(" "+str(c)+" ")
-    collen = [1] * len(rows[0])
+    if len(rows) == 0 or len(rows[0]) == 0:
+        collen = [1]
+    else:
+        collen = [1] * len(rows[0])
     for r in rows:
         for i in range(len(r)):
             curlen = len(r[i])
             if collen[i] < curlen:
                 collen[i] = curlen
-    width = sum(collen)+len(collen)
+    width = max(sum(collen)+len(collen), len(title), max([len(x) for x in header]))
     win = makewin(len(header)+(len(rows)*2), width, title)
     win.move(1,1)
     for i in range(len(header)):
