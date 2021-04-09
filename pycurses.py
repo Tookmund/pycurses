@@ -236,8 +236,10 @@ def table(title, header, inputrows):
 
     for r in rows:
         y, x = win.getyx()
-        win.move(y+1, 1)
+        win.move(y+1, 0)
+        win.addch(curses.ACS_LTEE)
         win.hline(curses.ACS_HLINE, width)
+        win.addch(y+1, width+1, curses.ACS_RTEE)
         win.move(y+2, 1)
         for i in range(len(r)):
             if i > 0:
