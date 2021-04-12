@@ -117,10 +117,9 @@ def search(title, autocomplete):
     k = ""
     curloc = [0,0]
     selection = -1
-    newsearch = False
+    newsearch = True
 
     while k != "\n":
-        k = win.getkey()
         curloc[0], curloc[1]  = win.getyx()
         win.move(curloc[0], curloc[1])
         if k == "\n":
@@ -154,10 +153,7 @@ def search(title, autocomplete):
         if newsearch:
             selection = -1
             newsearch = False
-            if searchstr == "":
-                res = []
-            else:
-                res = autocomplete(searchstr, limit)
+            res = autocomplete(searchstr, limit)
         for i in range(len(res)):
             y = curloc[0]+2+i
             x = 1
@@ -167,6 +163,8 @@ def search(title, autocomplete):
                 win.chgat(y, x, len(item), curses.A_REVERSE)
         win.move(curloc[0], curloc[1])
         win.refresh()
+        k = win.getkey()
+
     if selection != -1:
         return res[selection][0]
     return searchstr
