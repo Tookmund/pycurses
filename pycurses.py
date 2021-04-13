@@ -201,7 +201,7 @@ def form(title, *args):
     for i in range(len(args)):
         qwidth = len(args[i])+2
         win.move(i+1, qwidth+1)
-        res[i] = win.getstr(width-qwidth-1)
+        res[i] = win.getstr(width-qwidth-1).decode("utf-8")
     curses.noecho()
     return res
 
