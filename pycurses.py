@@ -104,7 +104,7 @@ def search(title, autocomplete):
     |                                                                   |
     +-↑ ↓ to select, ENTER to accept------------------------------------+
     """
-    width = defaultwinwidth()
+    width = max(defaultwinwidth(), len(title))
     height = curses.LINES // 2
     # One line for text entry, another for the horizontal separator
     limit = height-2
@@ -192,7 +192,7 @@ def form(title, *args):
 
     """
     res = [None] * len(args)
-    width = defaultwinwidth()
+    width = max(defaultwinwidth(), len(title))
     win = makewin(len(args), width, title)
     for i in range(len(args)):
         win.addstr(i+1, 1, args[i]+": ")
@@ -273,7 +273,7 @@ def alert(title, message):
     """
     message = " "+message+" "
     helptext = "Press any key to continue"
-    width = max(len(message), len(helptext))
+    width = max(len(message), len(helptext), len(title))
     win = makewin(2, width, title)
     win.addstr(1,1, message)
     win.addstr(3,1, "Press any key to continue")
@@ -311,7 +311,7 @@ def makewin(height, width=None, title=None):
     height += 2
     width += 2
     if width is None:
-        width = defaultwinwidth()
+        width = max(defaultwidth(), len(title))
     y, x = center(height, width)
     win = curses.newwin(height, width, y, x)
     win.keypad(True)
