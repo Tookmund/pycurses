@@ -313,7 +313,13 @@ def makewin(height, width=None, title=None):
     if width is None:
         width = max(defaultwidth(), len(title))
     y, x = center(height, width)
-    win = curses.newwin(height, width, y, x)
+    try:
+        win = curses.newwin(height, width, y, x)
+    except:
+        curses.endwin()
+        print("\n\nYour Terminal is Too Small! Please get a bigger one and try again!")
+        sys.exit(1)
+
     win.keypad(True)
     win.box()
     if title is not None:
