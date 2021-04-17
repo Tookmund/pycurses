@@ -271,12 +271,15 @@ def alert(title, message):
     |                                                                   |
     +-Press any key to continue-----------------------------------------+
     """
-    message = " "+message+" "
+    message = message.split("\n")
     helptext = "Press any key to continue"
-    width = max(len(message), len(helptext), len(title))
-    win = makewin(2, width, title)
-    win.addstr(1,1, message)
-    win.addstr(3,1, "Press any key to continue")
+    width = max(max([len(x) for x in message]), len(helptext), len(title))
+    win = makewin(len(message), width, title)
+    y, x = 1, 1
+    for m in message:
+        win.addstr(y,x, m)
+        y += 1
+    win.addstr(y,1, "Press any key to continue")
     win.refresh()
     win.getkey()
 
